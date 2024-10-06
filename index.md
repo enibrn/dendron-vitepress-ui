@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: Welcome
+  name: dendron-vitepress-ui
   text: Dendron + Vitepress
-  tagline: Integration
+  tagline: A website generated from notes
 ---

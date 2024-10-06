@@ -2,9 +2,9 @@
   <Layout>
     <template #doc-before>
       <CopyButton
-        message="Link copiato"
-        label="Copia il link a questa pagina"
-        :content="`https://enibrn.github.io/eniblog/${$frontmatter.id}`"
+        message="Link copied"
+        label="Copy the link to this page"
+        :content="`https://enibrn.github.io/dendron-vitepress/${$frontmatter.id}`"
       />
 
       <Badges
@@ -50,7 +50,7 @@ function getRedirectFromRoute(path) {
   if (!path) return null;
 
   //getting page guid from url
-  const regex = /\/eniblog\/(.*?)\.html/;
+  const regex = /\/dendron-vitepress\/(.*?)\.html/;
   const match = path.match(regex);
   const guid = match ? match[1] : null;
 

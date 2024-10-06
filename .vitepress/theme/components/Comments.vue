@@ -7,10 +7,10 @@
     <component
       :is="'script'"
       src="https://giscus.app/client.js"
-      data-repo="enibrn/eniblog"
-      data-repo-id="R_kgDOMrSLXA"
+      data-repo="enibrn/dendron-vitepress-ui"
+      data-repo-id="R_kgDOM8PQYg"
       data-category="Announcements"
-      data-category-id="DIC_kwDOMrSLXM4CieOq"
+      data-category-id="DIC_kwDOM8PQYs4CjHr4"
       data-mapping="specific"
       :data-term="giscusPageId"
       data-strict="1"

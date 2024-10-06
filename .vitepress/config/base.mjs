@@ -16,12 +16,12 @@ const rewrites = {};
 rewrites[notesPath + '/:note'] = ':note';
 
 export const base = defineConfig({
-  title: 'eniblog',
-  base: '/eniblog/',
-  description: 'enib + (b)log = eniblog',
+  title: 'dendron-vitepress',
+  base: '/dendron-vitepress/',
+  description: 'Dendron + Vitepress',
   themeConfig: {
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/enibrn/eniblog' }
+      { icon: 'github', link: 'https://github.com/enibrn/dendron-vitepress-ui' }
     ],
     nav: siteMetadata.nav,
     sidebar: siteMetadata.sidebar,

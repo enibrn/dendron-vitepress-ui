@@ -1,4 +1,6 @@
 import fs from 'fs';
+import matter from 'gray-matter';
+import removeMd from 'remove-markdown';
 
 //should be refactored with composable pattern instead of oop? Or a mix of the two
 export class SiteMetadataService {
@@ -58,13 +60,13 @@ export class SiteMetadataService {
           .map(x => x.key)
           .find(x => sidebarLeafLink.startsWith('/' + x + '.'));
 
-          for (let sidebarItem of sidebarItems) {
-            if (sidebarItem.key === childItemToExpandKey) {
-              sidebarItem.collapsed = false;
-            } else {
-              sidebarItem.collapsed = true;
-            }
+        for (let sidebarItem of sidebarItems) {
+          if (sidebarItem.key === childItemToExpandKey) {
+            sidebarItem.collapsed = false;
+          } else {
+            sidebarItem.collapsed = true;
           }
+        }
       }
     } else {
       result.items = [];
@@ -92,7 +94,7 @@ export class SiteMetadataService {
       if (landIntoLastPage || !this.#sidebarLeafLinks[navKey])
         this.#sidebarLeafLinks[navKey] = result.link;
 
-      this.redirects[item.guid] = `/eniblog/${item.key}`;
+      this.redirects[item.guid] = `/dendron-vitepress/${item.key}`;
     } else {
       result.items = [];
       childItems.forEach(childItem => {
@@ -133,15 +135,17 @@ export class SiteMetadataService {
     const results = [];
 
     lastItems.forEach(item => {
-      const fcontent = fs.readFileSync(item.relativeFilePath, 'utf-8');
+      const fcontent = fs.readFileSync(item.relativeFilePath, 'utf-8'); //full content: frontmatter + body
+      const { content } = matter(fcontent); //only body
+      const excerpt = SiteMetadataService.#getExcerpt(content);
 
       const result = {
         title: item.title,
-        details: SiteMetadataService.#getCardBody(fcontent, item, isNew),
+        details: SiteMetadataService.#getCardBody(excerpt, item, isNew),
         link: item.link,
         //image not implemented currently
         // icon: {
-        //   src: SiteMetadataService.#getFirstImageLink(fcontent),
+        //   src: SiteMetadataService.#getFirstImageLink(content),
         //   width: '100px'
         // }
       };
@@ -152,34 +156,27 @@ export class SiteMetadataService {
     return results;
   }
 
-  static #getCardBody(fcontent, item, isNew) {
-    const excerpt = SiteMetadataService.#getExcerpt(fcontent);
-
+  static #getCardBody(excerpt, item, isNew) {
     const badgeClass = isNew ? "tip" : "info";
 
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const formatDate = (date) => date.toLocaleDateString("it-IT", options);
     const dateString = isNew ? formatDate(item.createdDate) : formatDate(item.updatedDate);
-    const badgeText = isNew ? `Creato il ${dateString}` : `Aggiornato il ${dateString}`;
+    const badgeText = isNew ? `Created on ${dateString}` : `Updated on ${dateString}`;
 
     const result = `${excerpt}<br><br><span class="VPBadge ${badgeClass}">${badgeText}</span>`;
     return result;
   }
 
-  static #getExcerpt(fcontent) {
-    //this will take the incipit between the two --- lines, or the rest of the article
-    //it could throw an error on [2] if blank note, should never happen
-    //elsewhere rethink also how lastItems are taken, skip blank note etc...
-    const content = fcontent.split("---")[2].split("#")[0].trim();
-    return truncate(content, 100, true);
+  static #getExcerpt(fcontent, maxExcerptLength = 100) {
+    let contentText = removeMd(fcontent).trim().replace(/\s+/g, ' ');
+    const excerpt = contentText.slice(0, maxExcerptLength);
 
-    function truncate(str, n, useWordBoundary) {
-      if (str.length <= n) { return str; }
-      const subString = str.slice(0, n - 1); // the original check
-      return (useWordBoundary
-        ? subString.slice(0, subString.lastIndexOf(" "))
-        : subString) + "...";//"&hellip;";
-    };
+    if (contentText.length > maxExcerptLength) {
+      return excerpt + '...';
+    }
+
+    return excerpt;
   }
 
   //similar to logic in ImageManager of dendron-move-images
