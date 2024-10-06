@@ -4,7 +4,7 @@
       <CopyButton
         message="Link copied"
         label="Copy the link to this page"
-        :content="`https://enibrn.github.io/dendron-vitepress/${$frontmatter.id}`"
+        :content="`https://enibrn.github.io/dendron-vitepress-ui/${$frontmatter.id}`"
       />
 
       <Badges

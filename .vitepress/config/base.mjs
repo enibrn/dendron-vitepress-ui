@@ -17,7 +17,7 @@ rewrites[notesPath + '/:note'] = ':note';
 
 export const base = defineConfig({
   title: 'dendron-vitepress',
-  base: '/dendron-vitepress/',
+  base: '/dendron-vitepress-ui/',
   description: 'Dendron + Vitepress',
   themeConfig: {
     socialLinks: [

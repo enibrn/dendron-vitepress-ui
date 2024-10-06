@@ -94,7 +94,7 @@ export class SiteMetadataService {
       if (landIntoLastPage || !this.#sidebarLeafLinks[navKey])
         this.#sidebarLeafLinks[navKey] = result.link;
 
-      this.redirects[item.guid] = `/dendron-vitepress/${item.key}`;
+      this.redirects[item.guid] = `/dendron-vitepress-ui/${item.key}`;
     } else {
       result.items = [];
       childItems.forEach(childItem => {
